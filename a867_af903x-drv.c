@@ -1,9 +1,9 @@
 #include "a867_af903x.h"
 
 #define FW_VER         0x08060000
-int dvb_usb_af903x_debug = 255; // enable all level by default
+int dvb_usb_af903x_debug = 0; // disable all level by default
 module_param_named(debug,dvb_usb_af903x_debug, int, 0644);
-MODULE_PARM_DESC(debug, "set debugging level.(info=1,deb_fw=2,deb_fwdata=4,deb_data=8)" DVB_USB_DEBUG_STATUS);
+MODULE_PARM_DESC(debug, "set debugging level (info=1, deb_fw=2, deb_fwdata=4, deb_data=8 (or-able)), default=0");
 
 struct usb_device *udevs = NULL;
 struct usb_interface *uintfs = NULL;

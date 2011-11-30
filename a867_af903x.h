@@ -74,6 +74,7 @@
 
 
 extern int dvb_usb_af903x_debug;
+/*
 #if CONFIG_DVB_USB_DEBUG
 #define avprintk(dbg, lvl, fmt, args...) \
 		do { \
@@ -87,8 +88,14 @@ extern int dvb_usb_af903x_debug;
 #define deb_fw(fmt, args...)     avprintk(dvb_usb_af903x_debug,0x02,fmt, ## args)
 #define deb_fwdata(fmt, args...) avprintk(dvb_usb_af903x_debug,0x04,fmt, ## args)
 #define deb_data(fmt, args...)   avprintk(dvb_usb_af903x_debug,0x08,fmt, ## args)
+*/
 //#define deb_data(args...)   printk(KERN_NOTICE args)
 
+#define deb_force(args...) printk(KERN_DEBUG args);
+#define deb_info(args...) if (dvb_usb_af903x_debug & 1) printk(KERN_DEBUG args);
+#define deb_fw(args...) if (dvb_usb_af903x_debug & 2) printk(KERN_DEBUG args);
+#define deb_fwdata(args...)   if (dvb_usb_af903x_debug & 4) printk(KERN_DEBUG args);
+#define deb_data(args...)   if (dvb_usb_af903x_debug & 8) printk(KERN_DEBUG args);
 
 typedef struct _GPIO_MAPPINGS {
 	unsigned short  I2C_SLAVE_ADDR;
