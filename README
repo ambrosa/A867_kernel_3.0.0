@@ -1,0 +1,70 @@
+2011-12-01
+
+Original Realtek RTL2832U chipset (DVB/DAB) Linux 2.6.x driver rel. 2.2.2 , "full" version
+Linux DVB-T Avermedia A867 (italian SKY Digital Key "blue led") driver
+
+- code cleanup
+- added SNR (was missing) 16bit output or dB output (see modinfo param 'snrdb')
+
+
+**** UBUNTU FRESH INSTALL ****
+
+- install compile kit
+sudo apt-get install build-essential
+
+- install linux headers
+sudo apt-get install linux-headers-$(uname -r)
+
+- install git
+sudo apt-get install git
+
+- clone this repo using git
+git clone 
+
+- goto into source dir
+cd A867_kernel_3.0.0
+
+- compile code
+make clean
+make
+
+- install module
+sudo make install
+
+- insert module (or reboot)
+modprobe dvb_usb_a867
+
+If all is fine you can see in kernel log something like this:
+  [18087.037024] dvb-usb: found a 'USB DVB-T DEVICE' in warm state.
+  [18087.037031] dvb-usb: will pass the complete MPEG2 transport stream to the software demuxer.
+  [18087.038776] DVB: registering new adapter (USB DVB-T DEVICE)
+  [18087.055952] RTL2832U usb_init_bulk_setting : USB2.0 HIGH SPEED (480Mb/s)
+  [18087.287475] RTL2832U check_tuner_type : FC0012 tuner on board...
+  [18087.853235] DVB: registering adapter 0 frontend 0 (Realtek DVB-T RTL2832)...
+  [18087.853384] input: IR-receiver inside an USB DVB receiver as /devices/pci0000:00/0000:00:1d.7/usb1/1-7/input/input15
+  [18087.853419] dvb-usb: schedule remote query interval to 287 msecs.
+  [18087.853423] dvb-usb: USB DVB-T DEVICE successfully initialized and connected.
+  [18087.853447] usbcore: registered new interface driver dvb_usb_rtl2832u
+
+
+Note: Module dvb_usb_a867 has many options (use modinfo dvb_usb_a867 to see them)
+
+- if you want enable debug (default disabled) use:
+modprobe dvb_usb_a867 debug=255
+
+
+**** UPDATING LOCAL GIT REPO WITH NEW CHANGES ****
+
+- go into local git repo 
+cd A867_kernel_3.0.0
+
+- update local files with new changes
+git pull
+
+- compile 
+make clean
+make
+
+- install module
+sudo make install
+
