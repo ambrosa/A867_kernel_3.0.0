@@ -19,7 +19,7 @@ sudo apt-get install linux-headers-$(uname -r)
 sudo apt-get install git
 
 - clone this repo using git
-git clone 
+git clone https://github.com/ambrosa/A867_kernel_3.0.0.git
 
 - goto into source dir
 cd A867_kernel_3.0.0
@@ -32,25 +32,22 @@ make
 sudo make install
 
 - insert module (or reboot)
-modprobe dvb_usb_a867
+modprobe dvb-usb-a867
 
 If all is fine you can see in kernel log something like this:
-  [18087.037024] dvb-usb: found a 'USB DVB-T DEVICE' in warm state.
-  [18087.037031] dvb-usb: will pass the complete MPEG2 transport stream to the software demuxer.
-  [18087.038776] DVB: registering new adapter (USB DVB-T DEVICE)
-  [18087.055952] RTL2832U usb_init_bulk_setting : USB2.0 HIGH SPEED (480Mb/s)
-  [18087.287475] RTL2832U check_tuner_type : FC0012 tuner on board...
-  [18087.853235] DVB: registering adapter 0 frontend 0 (Realtek DVB-T RTL2832)...
-  [18087.853384] input: IR-receiver inside an USB DVB receiver as /devices/pci0000:00/0000:00:1d.7/usb1/1-7/input/input15
-  [18087.853419] dvb-usb: schedule remote query interval to 287 msecs.
-  [18087.853423] dvb-usb: USB DVB-T DEVICE successfully initialized and connected.
-  [18087.853447] usbcore: registered new interface driver dvb_usb_rtl2832u
+ [ 1837.177882] AVerMedia A867 driver module V1.0.27 loaded.
+ [ 1837.262311] dvb-usb: found a 'AVerMedia A867 DVB-T Recevier' in warm state.
+ [ 1837.866455] dvb-usb: will pass the complete MPEG2 transport stream to the software demuxer.
+ [ 1837.866749] DVB: registering new adapter (AVerMedia A867 DVB-T Recevier)
+ [ 1837.871592] DVB: registering adapter 0 frontend 0 (A867 USB DVB-T)...
+ [ 1837.890331] dvb-usb: AVerMedia A867 DVB-T Recevier successfully initialized and connected.
+ [ 1837.890372] usbcore: registered new interface driver dvb_usb_A867
 
 
-Note: Module dvb_usb_a867 has many options (use modinfo dvb_usb_a867 to see them)
+Note: Module dvb-usb-a867 has many options (use modinfo dvb_usb_a867 to see them)
 
 - if you want enable debug (default disabled) use:
-modprobe dvb_usb_a867 debug=255
+modprobe dvb-usb-a867 debug=255
 
 
 **** UPDATING LOCAL GIT REPO WITH NEW CHANGES ****

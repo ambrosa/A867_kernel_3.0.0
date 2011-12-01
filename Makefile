@@ -1,21 +1,15 @@
-# Copyright (C) 2011 Xgaz <xgazza@inwind.it>
 # License: GPL
-# RTL2832U Driver
 
-
-# Change BASEDIR accordingly to your paths (ambrosa)
-#BASEDIR := /home/ambrosa/GIT
-#SOURCEDIR := $(BASEDIR)/DVB-Realtek-RTL2832U-2.2.2-10tuner-mod_kernel-3.0.0/RTL2832-2.2.2_kernel-3.0.0
 
 SOURCEDIR := $(PWD)
 # ----------------------------------------
 
-dvb-a867-objs := a867_af903x-core.o a867_af903x-devices.o a867_af903x-drv.o \
+dvb-usb-a867-objs := a867_af903x-core.o a867_af903x-devices.o a867_af903x-drv.o \
                        a867_af903x-fe.o a867_af903x-tuner.o a867_cmd.o a867_standard.o \
                        a867_demodulator.o a867_demodulatorextend.o a867_usb2impl.o \
                        a867_user.o a867_mxl5007t.o a867_Maxlinear_MXL5007.o a867_Afa_AF9007.o
 
-obj-m += dvb-a867.o
+obj-m += dvb-usb-a867.o
 
 
 EXTRA_CFLAGS += -I$(SOURCEDIR)/include/ \
