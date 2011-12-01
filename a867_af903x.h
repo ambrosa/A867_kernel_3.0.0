@@ -30,7 +30,9 @@
 #define ENABLE_HW_PID 0
 
 
-#define ENABLE_READ_REG 0
+//enable snr reading register , default = 0
+#define ENABLE_READ_REG 1
+
 
 #define SUPPORT_AF903X_EVB	0
 
@@ -284,6 +286,7 @@ extern DWORD DL_Tuner_SetFreq(u32 ucFreq,u8 ucBw);
 extern DWORD DL_ReSetInterval(void);
 extern DWORD DL_GetChannelStat(u32 *ber, u32 *berbits, u32 *ubc);
 extern DWORD DL_GetSignalStrength(u16 *strength);
+extern DWORD DL_GetSignalQuality(u16 *strength);
 extern DWORD DL_GetLocked(Bool *bLock);
 extern DWORD DL_MonitorReception(Bool *bLock);
 extern DWORD DL_IsPsbOverflow(void *handle, Byte ucSlaveDemod, Bool *bPsvOverflow);

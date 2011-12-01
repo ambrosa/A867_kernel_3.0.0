@@ -883,6 +883,20 @@ DWORD DL_GetSignalStrength(u16 *strength)
 	return dwError;
 }
 
+DWORD DL_GetSignalQuality(u16 *squality)
+{
+	DWORD dwError = Error_NO_ERROR;
+	BYTE    ucSlaveDemod=0;
+	Byte 	str;
+	deb_data("- Enter %s Function -\n",__FUNCTION__);	 	
+
+	dwError = Demodulator_getSignalQuality((Demodulator*) &PDC->Demodulator, ucSlaveDemod, &str);
+
+	if( squality ) *squality = str;
+
+	return dwError;
+}
+
 
 DWORD DL_GetChannelStat(u32 *ber, u32 *berbits, u32 *ubc)
 {

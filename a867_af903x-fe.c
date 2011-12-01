@@ -33,13 +33,14 @@ struct af903xm_state {
 	int locked;
 };
 
-int test_map_snr(u32 snr_data, u32 *snr)
+int test_map_snr(u32 snr_data, u16 *snr, u16 *maxsnr)
 {
 	Dword error = 0;
 	Dword snr_value = 0;
 	Byte constellation = 0;
 	Byte transmission_mode = 0;
 
+	*maxsnr = 0;
 	*snr = 0;
 
     /** Get constellation type */
@@ -53,14 +54,17 @@ int test_map_snr(u32 snr_data, u32 *snr)
     if (error) goto exit;
 
 	// Adjust snr data by transmission mode
-	if(transmission_mode == 0)		snr_value = snr_data * 4;
-	else if(transmission_mode ==2)	snr_value = snr_data * 2;
-	else							snr_value = snr_data;
+	if (transmission_mode == 0)
+		snr_value = snr_data * 4;
+	else if (transmission_mode == 2)	
+		snr_value = snr_data * 2;
+	else
+		snr_value = snr_data;
 
    if( constellation == 0) //Constellation_QPSK
-    {
+   {
            if(snr_value < 0xB4771)    *snr = 0;
-           else if(snr_value < 0xC1AED)           *snr = 1;
+           else if(snr_value < 0xC1AED)   *snr = 1;
            else if(snr_value < 0xD0D27)   *snr = 2;
            else if(snr_value < 0xE4D19)   *snr = 3;
            else if(snr_value < 0xE5DA8)   *snr = 4;
@@ -83,6 +87,7 @@ int test_map_snr(u32 snr_data, u32 *snr)
            else if(snr_value < 0x190AF1)   *snr = 21;
            else if(snr_value < 0x191451)   *snr = 22;
            else   *snr = 23;
+	   *maxsnr = 23;
     }
     else if ( constellation == 1) //Constellation_16QAM
     {
@@ -113,6 +118,7 @@ int test_map_snr(u32 snr_data, u32 *snr)
            else if(snr_value < 0xC6C31)   *snr = 24;
            else if(snr_value < 0xC7925)   *snr = 25;
            else    *snr = 26;
+	   *maxsnr = 26;
     }
     else if ( constellation == 2) //Constellation_64QAM
     {
@@ -146,6 +152,7 @@ int test_map_snr(u32 snr_data, u32 *snr)
            else if(snr_value < 0x59FEB)   *snr = 27;
            else if(snr_value < 0x5BF38)   *snr = 28;
            else    *snr = 29;
+	   *maxsnr = 29;
     }
 	
 	
@@ -375,7 +382,6 @@ static int af903x_read_status(struct dvb_frontend *fe, fe_status_t *stat)
 	struct af903xm_state *state = fe->demodulator_priv;
 	u32	snr_data;
 	u32 str_dbm_data;
-	u32 snr;
 
 	deb_data("- Enter %s Function -\n",__FUNCTION__);
 	*stat = 0;
@@ -476,6 +482,26 @@ static int af903x_read_ber(struct dvb_frontend *fe, u32 *ber)
 	return 0;
 }
 
+static int af903x_read_signal_quality(struct dvb_frontend *fe, u16 *squality)
+{
+	DWORD dwError;
+	Bool bLock;
+
+	deb_data("- Enter %s Function -\n",__FUNCTION__);	
+
+	dwError = DL_GetSignalStrength(squality);
+
+	dwError = DL_GetLocked(&bLock);
+	if( dwError ) {
+		deb_data("- Function %s error reading signal quality -\n",__FUNCTION__);	
+		*squality = 0;
+		return 0;
+	}
+	
+	deb_data("- Exit %s Function, signal quality=%d -\n",__FUNCTION__, squality ? *squality : -1);	
+	return 0;
+}
+
 static int af903x_read_signal_strength(struct dvb_frontend *fe, u16 *strength)
 {
 	struct af903xm_state *state = fe->demodulator_priv;
@@ -500,33 +526,58 @@ static int af903x_read_signal_strength(struct dvb_frontend *fe, u16 *strength)
 	return 0;
 }
 
+
 static int af903x_read_snr(struct dvb_frontend* fe, u16 *snr)
 {
-#if !ENABLE_READ_REG
-	*snr = 0x0000;
-	return -ENOSYS;
-#else
-	Byte value = 0;
+	Byte value_7_0 = 0;
+	Byte value_15_8 = 0;
+	Byte value_23_16 = 0;
 	Dword addr = 0;
 	Dword dwError = 0;
+	u32 snr_val=0;
+	u16 snr_max=0;
+	u16 snr_16bit = 0;
 
-	printk("Regiter Addr: 0x%x", *snr);
+	*snr = 0;
 
-	addr = *snr;
+	deb_data("- Enter %s Function -\n",__FUNCTION__);
 
-    dwError = Standard_readRegister ((Demodulator *)&PDC->Demodulator, PDC->Map.RF_SW_HOST, Processor_OFDM, addr, &value);
+	dwError = Standard_readRegister ((Demodulator *)&PDC->Demodulator, PDC->Map.RF_SW_HOST, Processor_OFDM, qnt_vbc_err_7_0, &value_7_0);
 	if(dwError)	{
-		printk("Read Register fail!! \n");
-		*snr = 0xffff;
+		deb_data("- Function %s  qnt_vbc_err_7_0 register read fail ! -\n",__FUNCTION__);
 		return 0;
 	}
 
-	*snr = value;
+	dwError = Standard_readRegister ((Demodulator *)&PDC->Demodulator, PDC->Map.RF_SW_HOST, Processor_OFDM, qnt_vbc_err_15_8, &value_15_8);
+	if(dwError)	{
+		deb_data("- Function %s  qnt_vbc_err_15_8 register read fail ! -\n",__FUNCTION__);
+		return 0;
+	}
 
-	return 0;
-#endif
+	dwError = Standard_readRegister ((Demodulator *)&PDC->Demodulator, PDC->Map.RF_SW_HOST, Processor_OFDM, qnt_vbc_err_23_16, &value_23_16);
+	if(dwError)	{
+		deb_data("- Function %s  qnt_vbc_err_23_16 register read fail ! -\n",__FUNCTION__);
+		return 0;
+	}
+
+	snr_val = (value_23_16 << 16) + (value_15_8 << 8) + value_7_0;
+	deb_data("- Function %s SNR row val 0x%x -\n",__FUNCTION__,snr_val);
+
+	dwError = test_map_snr(snr_val, snr, &snr_max);
+	if(dwError)	{
+		deb_data("- Function %s  map_snr fail ! -\n",__FUNCTION__);
+		*snr = 0;
+		return 0;
+	}
+	snr_16bit = (0xffff / snr_max) * *snr;
+	deb_data("- Exit %s SNR %d dB , %d 16bit -\n",__FUNCTION__,*snr,snr_16bit);
+
+	*snr = snr_16bit;
+
 }
-//
+
+
+
 static void af903x_release(struct dvb_frontend *demod)
 {
 	struct af903xm_state *st = demod->demodulator_priv;
@@ -564,6 +615,7 @@ static struct dvb_frontend_ops af903x_ops = {
 	.read_ber             = af903x_read_ber,
 	.read_signal_strength = af903x_read_signal_strength,
 	.read_snr             = af903x_read_snr,
+//	.read_snr             = af903x_read_signal_quality,
 	.read_ucblocks	      = af903x_read_ubc,
 };
 

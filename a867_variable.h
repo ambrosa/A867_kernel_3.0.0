@@ -77,9 +77,9 @@
 //----------------------------------------------
 //statistic performance..
 
-#define qnt_vbc_err_7_0                     0x002c
-#define qnt_vbc_err_15_8                    0x002d
-#define qnt_vbc_err_23_16                   0x002e
+#define qnt_vbc_err_7_0                     0x002c  //snr
+#define qnt_vbc_err_15_8                    0x002d  //snr
+#define qnt_vbc_err_23_16                   0x002e  //snr
 #define r_qnt_vbc_sframe_num                0x002f
 #define tpsd_const                          0x0030
 #define tpsd_txmod                          0x0031
