@@ -168,8 +168,7 @@ int test_read_strength_dbm(struct dvb_frontend *demod, u32 *str)
 	Dword dwError = 0;
 	Byte str_dbm = 0;
 
-
-	// Read StrengthDBM
+   // Read StrengthDBM
     dwError = Standard_readRegister ((Demodulator *)&PDC->Demodulator, PDC->Map.RF_SW_HOST, Processor_OFDM, est_rf_level_dbm, &str_dbm);
     if(dwError) {
 	    deb_data("%s error, ret=0x%x\n", __FUNCTION__, dwError);
@@ -484,28 +483,39 @@ static int af903x_read_ber(struct dvb_frontend *fe, u32 *ber)
 	return 0;
 }
 
-/* unused
-static int af903x_read_signal_quality(struct dvb_frontend *fe, u16 *squality)
+
+static int af903x_read_signal_strength(struct dvb_frontend *fe, u16 *strength)
 {
 	DWORD dwError;
 	Bool bLock;
+	Byte value;
 
 	deb_data("- Enter %s Function -\n",__FUNCTION__);	
 
-	dwError = DL_GetSignalStrength(squality);
+	dwError = Standard_readRegister ((Demodulator *)&PDC->Demodulator, PDC->Map.RF_SW_HOST, Processor_OFDM, signal_strength, &value);
+	//dwError = DL_GetSignalStrength(strength);
+	if( dwError ) {
+		deb_data("- Function %s error reading signal strength -\n",__FUNCTION__);	
+		*strength = 0;
+		return 1;
+	}
 
 	dwError = DL_GetLocked(&bLock);
 	if( dwError ) {
-		deb_data("- Function %s error reading signal quality -\n",__FUNCTION__);	
-		*squality = 0;
-		return 0;
+		deb_data("- Function %s error reading signal quality : lost lock -\n",__FUNCTION__);	
+		*strength = 0;
+		return 1;
 	}
 	
-	deb_data("- Exit %s Function, signal quality=%d -\n",__FUNCTION__, squality ? *squality : -1);	
+	deb_data("- Exit %s Function, signal strength (0-100)=%d -\n",__FUNCTION__, value);	
+
+	// 16 bit output
+	*strength = value * (0xffff / 100);
+
 	return 0;
 }
-*/
 
+/*
 static int af903x_read_signal_strength(struct dvb_frontend *fe, u16 *strength)
 {
 	struct af903xm_state *state = fe->demodulator_priv;
@@ -529,7 +539,7 @@ static int af903x_read_signal_strength(struct dvb_frontend *fe, u16 *strength)
 	deb_data("- Exit %s Function, strength=%d -\n",__FUNCTION__, strength? *strength:-1);	
 	return 0;
 }
-
+*/
 
 static int af903x_read_snr(struct dvb_frontend* fe, u16 *snr)
 {
