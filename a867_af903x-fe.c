@@ -223,6 +223,7 @@ int test_read_snr(struct dvb_frontend *demod, u32 *snr_data)
 
 
 
+/* unused
 static int af903x_set_bandwidth(struct dvb_frontend *demod, u8 bw_idx)
 {
 	struct af903xm_state *state = demod->demodulator_priv;
@@ -235,6 +236,7 @@ static int af903x_set_bandwidth(struct dvb_frontend *demod, u8 bw_idx)
 
 	return 0;
 }
+*/
 
 static void af903x_set_channel(struct af903x_ofdm_channel *ch)
 {
@@ -348,8 +350,8 @@ static int af903x_set_frontend(struct dvb_frontend* fe,
 	case BANDWIDTH_6_MHZ: bw=6; break;
 
 	case 6: 
-	case 7:
-	case 8:
+	//case 7:
+	//case 8:
 		bw = fep->u.ofdm.bandwidth;
 		deb_data("- %s wrong bw value: %d -\n",__FUNCTION__, fep->u.ofdm.bandwidth);
 		break;
@@ -377,11 +379,11 @@ static int af903x_set_frontend(struct dvb_frontend* fe,
 
 static int af903x_read_status(struct dvb_frontend *fe, fe_status_t *stat)
 {
-	DWORD dwError;
+	//DWORD dwError;
 	Bool bLock;
 	struct af903xm_state *state = fe->demodulator_priv;
-	u32	snr_data;
-	u32 str_dbm_data;
+	//u32	snr_data;
+	//u32 str_dbm_data;
 
 	deb_data("- Enter %s Function -\n",__FUNCTION__);
 	*stat = 0;
@@ -432,8 +434,8 @@ static int af903x_read_status(struct dvb_frontend *fe, fe_status_t *stat)
 static int af903x_read_ubc(struct dvb_frontend *fe, u32* ucblocks)
 {
 	struct af903xm_state *state = fe->demodulator_priv;
-	DWORD dwError;
-	Bool bLock;
+	//DWORD dwError;
+	//Bool bLock;
 
 	deb_data("- Enter %s Function -\n",__FUNCTION__);	
 
@@ -459,9 +461,9 @@ static int af903x_read_ubc(struct dvb_frontend *fe, u32* ucblocks)
 static int af903x_read_ber(struct dvb_frontend *fe, u32 *ber)
 {
 	struct af903xm_state *state = fe->demodulator_priv;
-	DWORD dwError;
-	u32 berbits;
-	Bool bLock;
+	//DWORD dwError;
+	//u32 berbits;
+	//Bool bLock;
 	deb_data("- Enter %s Function -\n",__FUNCTION__);	
 
 #if !USE_MONITOR_TH
@@ -482,6 +484,7 @@ static int af903x_read_ber(struct dvb_frontend *fe, u32 *ber)
 	return 0;
 }
 
+/* unused
 static int af903x_read_signal_quality(struct dvb_frontend *fe, u16 *squality)
 {
 	DWORD dwError;
@@ -501,12 +504,13 @@ static int af903x_read_signal_quality(struct dvb_frontend *fe, u16 *squality)
 	deb_data("- Exit %s Function, signal quality=%d -\n",__FUNCTION__, squality ? *squality : -1);	
 	return 0;
 }
+*/
 
 static int af903x_read_signal_strength(struct dvb_frontend *fe, u16 *strength)
 {
 	struct af903xm_state *state = fe->demodulator_priv;
-	DWORD dwError;
-	Bool bLock;
+	//DWORD dwError;
+	// Bool bLock;
 	deb_data("- Enter %s Function -\n",__FUNCTION__);	
 
 #if !USE_MONITOR_TH
@@ -532,7 +536,7 @@ static int af903x_read_snr(struct dvb_frontend* fe, u16 *snr)
 	Byte value_7_0 = 0;
 	Byte value_15_8 = 0;
 	Byte value_23_16 = 0;
-	Dword addr = 0;
+	//Dword addr = 0;
 	Dword dwError = 0;
 	u32 snr_val=0;
 	u16 snr_max=0;
@@ -545,19 +549,19 @@ static int af903x_read_snr(struct dvb_frontend* fe, u16 *snr)
 	dwError = Standard_readRegister ((Demodulator *)&PDC->Demodulator, PDC->Map.RF_SW_HOST, Processor_OFDM, qnt_vbc_err_7_0, &value_7_0);
 	if(dwError)	{
 		deb_data("- Function %s  qnt_vbc_err_7_0 register read fail ! -\n",__FUNCTION__);
-		return 0;
+		return 1;
 	}
 
 	dwError = Standard_readRegister ((Demodulator *)&PDC->Demodulator, PDC->Map.RF_SW_HOST, Processor_OFDM, qnt_vbc_err_15_8, &value_15_8);
 	if(dwError)	{
 		deb_data("- Function %s  qnt_vbc_err_15_8 register read fail ! -\n",__FUNCTION__);
-		return 0;
+		return 1;
 	}
 
 	dwError = Standard_readRegister ((Demodulator *)&PDC->Demodulator, PDC->Map.RF_SW_HOST, Processor_OFDM, qnt_vbc_err_23_16, &value_23_16);
 	if(dwError)	{
 		deb_data("- Function %s  qnt_vbc_err_23_16 register read fail ! -\n",__FUNCTION__);
-		return 0;
+		return 1;
 	}
 
 	snr_val = (value_23_16 << 16) + (value_15_8 << 8) + value_7_0;
@@ -567,12 +571,14 @@ static int af903x_read_snr(struct dvb_frontend* fe, u16 *snr)
 	if(dwError)	{
 		deb_data("- Function %s  map_snr fail ! -\n",__FUNCTION__);
 		*snr = 0;
-		return 0;
+		return 1;
 	}
 	snr_16bit = (0xffff / snr_max) * *snr;
 	deb_data("- Exit %s SNR %d dB , %d 16bit -\n",__FUNCTION__,*snr,snr_16bit);
 
 	*snr = snr_16bit;
+
+	return 0;
 
 }
 
@@ -751,7 +757,7 @@ static int af903x_monitor_thread_func(void *data)
 #endif
 	while(!state->thread_should_stop && !signal_pending(current)) {
 	
-		DWORD dwError;
+		//DWORD dwError;
 		u32 ber, berbits, ucblocks;
 		u16 strength;
 

@@ -1,4 +1,9 @@
 #include "a867_af903x.h"
+//#include "a867_firmware.h"
+#include "a867_ofdm.h"
+
+#define true 1
+#define false 0
 
 #define FW_VER         0x08060000
 int dvb_usb_af903x_debug = 0; // disable all level by default
@@ -161,7 +166,7 @@ static DWORD DRV_SetFreqBw(
     
 	PDEVICE_CONTEXT pdc = (PDEVICE_CONTEXT)handle;
 
-	Bool bLock = true;
+	//Bool bLock = true;
 
 	deb_data("- Enter %s Function -\n ",__FUNCTION__);
 	deb_data("       ucSlaveDemod = %d, Freq= %d, BW=%d\n", ucSlaveDemod, dwFreq, ucBw);
@@ -468,7 +473,7 @@ DWORD A333TunerPowerControl(
 	
 		if(pdc->architecture == Architecture_PIP)
 		{
-			if(pdc->fc[0].tunerinfo.bTunerInited == false && pdc->fc[1].tunerinfo.bTunerInited == false) 
+			if(pdc->fc[0].tunerinfo.bTunerInited == 0 && pdc->fc[1].tunerinfo.bTunerInited == 0) 
            	{                                
                	if(pdc->bTunerPowerOff == false) 
                	{
@@ -994,7 +999,7 @@ DWORD DL_ApCtrl (
 {
         DWORD dwError = Error_NO_ERROR;
 	BYTE    ucSlaveDemod=0;
-	Bool bLock;
+	//Bool bLock;
 
 	down(&PDC->powerLock);
 
@@ -1214,7 +1219,7 @@ DWORD Device_init(struct usb_device *udev,struct usb_interface *uintf, PDEVICE_C
 
         	if (bBoot)
         	{
-			Bool bLock;
+			//Bool bLock;
             		error = DRV_ApCtrl(PDC, filterIdx, false);
             		if (error) deb_data("%d: DRV_ApCtrl Fail!\n", filterIdx);
         	} 

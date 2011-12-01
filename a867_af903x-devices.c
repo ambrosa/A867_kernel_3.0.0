@@ -4,7 +4,7 @@ int dvb_usb_af903x_hwpid = 1; // enable hw pid filter
 module_param_named(hwpid,dvb_usb_af903x_hwpid, int, 0644); 
 MODULE_PARM_DESC(debug, "set hw pid filter.(disable=0, enable=1)" DVB_USB_DEBUG_STATUS);
 
-static u16 gSWPIDTable[32];
+//static u16 gSWPIDTable[32];
 static int gTblUsed = 0;
 
 static int af903x_download_firmware(struct usb_device *udev, const struct firmware *fw)

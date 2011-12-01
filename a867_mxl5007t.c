@@ -441,6 +441,7 @@ static int mxl5007t_write_regs(struct mxl5007t_state *state,
 	return ret;
 }
 
+/* unused
 static int mxl5007t_read_reg(struct mxl5007t_state *state, u8 reg, u8 *val)
 {
 	int ret = MxL_I2C_Read(state->config->I2C_Addr, reg, val, state->config);
@@ -451,6 +452,8 @@ static int mxl5007t_read_reg(struct mxl5007t_state *state, u8 reg, u8 *val)
 	}
 	return ret;
 }
+
+*/
 
 static int mxl5007t_soft_reset(struct mxl5007t_state *state)
 {
@@ -504,6 +507,7 @@ fail:
 
 /* ------------------------------------------------------------------------- */
 
+/* unused
 static int mxl5007t_synth_lock_status(struct mxl5007t_state *state,
 				      int *rf_locked, int *ref_locked)
 {
@@ -525,7 +529,7 @@ static int mxl5007t_synth_lock_status(struct mxl5007t_state *state,
 fail:
 	return ret;
 }
-
+*/
 
 /* ------------------------------------------------------------------------- */
 
@@ -553,22 +557,26 @@ fail:
 
 /* ------------------------------------------------------------------------- */
 
+/* unused
 static int mxl5007t_init(struct mxl5007t_state *state)
 {
 	int ret;
 
-	/* wake from standby */
+	// wake from standby 
 	ret = mxl5007t_write_reg(state, 0x01, 0x01);
 	mxl_fail(ret);
 
 	return ret;
 }
 
+*/
+
+/* unused
 static int mxl5007t_sleep(struct mxl5007t_state *state)
 {
 	int ret;
 
-	/* enter standby mode */
+	// enter standby mode 
 	ret = mxl5007t_write_reg(state, 0x01, 0x00);
 	mxl_fail(ret);
 	ret = mxl5007t_write_reg(state, 0x0f, 0x00);
@@ -576,20 +584,26 @@ static int mxl5007t_sleep(struct mxl5007t_state *state)
 
 	return ret;
 }
+*/
 
 /* ------------------------------------------------------------------------- */
 
+/* unused
 static int mxl5007t_get_frequency(struct mxl5007t_state *state, u32 *frequency)
 {
 	*frequency = state->frequency;
 	return 0;
 }
 
+*/
+
+/* unused
 static int mxl5007t_get_bandwidth(struct mxl5007t_state *state, u32 *bandwidth)
 {
 	*bandwidth = state->bandwidth;
 	return 0;
 }
+*/
 
 void a867_mxl5007t_release(struct mxl5007t_state *state)
 {
@@ -602,6 +616,7 @@ void a867_mxl5007t_release(struct mxl5007t_state *state)
 	}
 }
 
+/* unused
 static int mxl5007t_get_chip_id(struct mxl5007t_state *state)
 {
 	char *name;
@@ -646,7 +661,7 @@ fail:
 	state->chip_id = MxL_UNKNOWN_ID;
 	return ret;
 }
-
+*/
 
 void a867_mxl5007t_attach(struct mxl5007t_config *cfg)
 {

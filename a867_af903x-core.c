@@ -180,7 +180,7 @@ static int af903x_probe(struct usb_interface *intf,
 static int af903x_suspend(struct usb_interface *intf, pm_message_t message)
 {
 	int error;
-	deb_data("Enter %s Function, message=0x%x\n",__FUNCTION__, message);
+	deb_data("Enter %s Function, message=0x%ux\n",__FUNCTION__, message.event);
 	error = DL_ApCtrl(0);
 	if (error) deb_data("DL_ApCtrl error : 0x%x\n", error);
 
@@ -213,7 +213,7 @@ static struct usb_driver af903x_driver = {
 #if LINUX_VERSION_CODE <=  KERNEL_VERSION(2,6,15)
 	.owner = THIS_MODULE,
 #endif
-	.name       = "dvb_usb_A867",
+	.name       = "dvb-usb-a867",
 	.probe      = af903x_probe,
 	.disconnect = dvb_usb_device_exit,
 	.id_table   = af903x_usb_id_table,

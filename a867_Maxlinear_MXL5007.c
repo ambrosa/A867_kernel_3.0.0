@@ -43,8 +43,8 @@ exit:
 UINT32 MxL_I2C_Write(UINT8 DeviceAddr, void* pArray, UINT32 ByteCount, struct mxl5007t_config* myTuner)
 {
     Dword error = Error_NO_ERROR;                /* Status to be returned */
-    Byte buffer[25];
-    Byte i;
+    // Byte buffer[25];
+    // Byte i;
 	Byte* pData;
 	pData = (Byte*)pArray;
     
@@ -163,7 +163,7 @@ Dword MXL5007_set (
 	IN  Word			bandwidth,
 	IN  Dword			frequency
 ) {
-	Dword status = 0;       
+	// Dword status = 0;       
 
 	deb_data("MxL5007 Set");
 	if(	a867_mxl5007t_set_params(MxL5007_TunerConfig.state, (enum mxl5007t_bw_mhz) (bandwidth / 1000), frequency * 1000) ) {

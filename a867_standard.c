@@ -972,7 +972,7 @@ Dword Standard_wordToInt (
 ) {
     Dword error = Error_NO_ERROR;
     short volt;
-    Dword dwUpVoltX100 = 330;
+    //Dword dwUpVoltX100 = 330;
 
     deb_info("Enter %s -\n", __FUNCTION__);
     input = input & 0x03FF;
@@ -1094,7 +1094,7 @@ Dword Standard_resetAgc (
     IN  Demodulator*    demodulator
 ) {
     Dword error = Error_NO_ERROR;
-    Byte temp = 0;
+    //Byte temp = 0;
 
     deb_info("Enter %s -\n", __FUNCTION__);
     error = Standard_writeRegisterBits (demodulator, 0, Processor_OFDM, p_reg_aagc_top_th_dis, reg_aagc_top_th_dis_pos, reg_aagc_top_th_dis_len, 0x00);
@@ -2008,7 +2008,7 @@ Dword Standard_loadScript (
     Dword error = Error_NO_ERROR;
     Word beginScript;
     Word endScript;
-    Byte adcType = 0;
+    //Byte adcType = 0;
     Byte i;
     Word j;
 	Byte value;
@@ -3245,7 +3245,7 @@ Dword Standard_setStreamType (
         error = Error_DRIVER_INVALID;
     }
 #else
-    Dword warning = Error_NO_ERROR;
+    //Dword warning = Error_NO_ERROR;
     Ganymede* ganymede;
     Byte i;
 
@@ -3275,6 +3275,11 @@ Dword Standard_setStreamType (
 
     /** Enter sub mode */
     switch (streamType) {
+
+	case StreamType_NONE : 
+		goto exit;
+		break;
+
         case StreamType_DVBT_DATAGRAM :
             if ((ganymede->busId == Bus_USB) || (ganymede->busId == Bus_USB11)) {
                 error = Standard_writeRegisterBits (demodulator, 0, Processor_OFDM, p_mp2if_mpeg_ser_mode, mp2if_mpeg_ser_mode_pos, mp2if_mpeg_ser_mode_len, 0);
@@ -4101,7 +4106,7 @@ Dword Standard_getDatagram (
     Ganymede* ganymede;
     Dword length = 0;
     Byte value;
-    Bool ready = False;
+    // Bool ready = False;
 
     deb_info("Enter %s -\n", __FUNCTION__);
     ganymede = (Ganymede*) demodulator;

@@ -21,7 +21,7 @@
 #include "a867_af903x-ioctl.h"
 #include "a867_demodulator.h"
 #include "a867_userdef.h"
-#include "a867_firmware.h"
+//#include "a867_firmware.h"
 #include "a867_type.h"
 #include "a867_Common.h"
 #include "a867_debug.h"

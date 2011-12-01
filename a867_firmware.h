@@ -5,6 +5,7 @@
 #define __FIRMWARE_H__
 
 
+/* moved to a867_ofdm.h
 
 #define DVB_LL_VERSION1 10
 
@@ -23,7 +24,7 @@
 #define DVB_OFDM_VERSION3 6
 
 #define DVB_OFDM_VERSION4 251
-
+*/
 
 
 #include "a867_type.h"
