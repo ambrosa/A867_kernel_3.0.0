@@ -25,7 +25,7 @@ default:
 	make -C $(KDIR) SUBDIRS=$(PWD) modules
 
 install:
-	cp dvb-a867.ko $(KINS)/`uname -r`/kernel/drivers/media/dvb/dvb-usb/ 
+	cp dvb-usb-a867.ko $(KINS)/`uname -r`/kernel/drivers/media/dvb/dvb-usb/ 
 	depmod -a
 
 clean:
