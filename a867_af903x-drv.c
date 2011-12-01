@@ -10,6 +10,10 @@ int dvb_usb_af903x_debug = 0; // disable all level by default
 module_param_named(debug,dvb_usb_af903x_debug, int, 0644);
 MODULE_PARM_DESC(debug, "set debugging level (info=1, deb_fw=2, deb_fwdata=4, deb_data=8 (or-able)), default=0");
 
+int dvb_usb_af903x_snrdb = 0; // output SNR 16bit format
+module_param_named(snrdb,dvb_usb_af903x_snrdb, int, 0644);
+MODULE_PARM_DESC(snrdb, "set SNR format (16bit=0, dB decibel=1), default=0");
+
 struct usb_device *udevs = NULL;
 struct usb_interface *uintfs = NULL;
 PDEVICE_CONTEXT PDC;

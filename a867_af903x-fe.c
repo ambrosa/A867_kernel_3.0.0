@@ -576,7 +576,8 @@ static int af903x_read_snr(struct dvb_frontend* fe, u16 *snr)
 	snr_16bit = (0xffff / snr_max) * *snr;
 	deb_data("- Exit %s SNR %d dB , %d 16bit -\n",__FUNCTION__,*snr,snr_16bit);
 
-	*snr = snr_16bit;
+	if (dvb_usb_af903x_snrdb == 0)
+		*snr = snr_16bit;
 
 	return 0;
 
