@@ -1,5 +1,9 @@
 #include "a867_af903x.h"
 
+#if (LINUX_VERSION_CODE >= KERNEL_VERSION(3,2,0)) || ((defined V4L2_VERSION) && (V4L2_VERSION >= 196608))
+#define V4L2_REFACTORED_MFE_CODE
+#endif
+
 int dvb_usb_af903x_hwpid = 1; // enable hw pid filter 
 module_param_named(hwpid,dvb_usb_af903x_hwpid, int, 0644); 
 MODULE_PARM_DESC(debug, "set hw pid filter.(disable=0, enable=1)" DVB_USB_DEBUG_STATUS);
@@ -56,15 +60,25 @@ static int af903x_identify_state(struct usb_device *udev, struct dvb_usb_device_
 static int af903x_frontend_attach(struct dvb_usb_adapter *adap)
 {
 	deb_data("- Enter %s Function -\n",__FUNCTION__);
-	adap->fe = af903x_attach(1);	
+#ifdef V4L2_REFACTORED_MFE_CODE
+	adap->fe_adap[0].fe = af903x_attach(1);
+
+	return adap->fe_adap[0].fe == NULL ? -ENODEV : 0;
+#else
+	adap->fe = af903x_attach(1);
 
 	return adap->fe == NULL ? -ENODEV : 0;
+#endif
 }
 
 static int af903x_tuner_attach(struct dvb_usb_adapter *adap)
 {
 	deb_data("- Enter %s Function -\n",__FUNCTION__);
+#ifdef V4L2_REFACTORED_MFE_CODE
+	tuner_attach(adap->fe_adap[0].fe);
+#else
 	tuner_attach(adap->fe);
+#endif
 	return  0;
 }
 
@@ -198,28 +212,35 @@ struct dvb_usb_device_properties af903x_properties[] = {
 		.num_adapters = 1,
 		.adapter = {
 			{
+#ifdef V4L2_REFACTORED_MFE_CODE
+				.num_frontends = 1,
+				.fe = {{
+#endif
 #if ENABLE_HW_PID
 					.caps = DVB_USB_ADAP_HAS_PID_FILTER | DVB_USB_ADAP_NEED_PID_FILTERING,
 #else
 					.caps = DVB_USB_ADAP_HAS_PID_FILTER,
 #endif
 					.pid_filter_count = 32,
-				.frontend_attach  = af903x_frontend_attach,
-				.tuner_attach     = af903x_tuner_attach,
-				.streaming_ctrl   = af903x_streaming_ctrl,
-				.pid_filter_ctrl  = af903x_pid_filter_ctrl,
-				.pid_filter		  = af903x_pid_filter,
+					.frontend_attach  = af903x_frontend_attach,
+					.tuner_attach     = af903x_tuner_attach,
+					.streaming_ctrl   = af903x_streaming_ctrl,
+					.pid_filter_ctrl  = af903x_pid_filter_ctrl,
+					.pid_filter		  = af903x_pid_filter,
 
-				.stream = { 
-				.type = USB_BULK,
-				.count = 10,
-				.endpoint = 0x84,
-				.u = {
-					.bulk = {
-						.buffersize = (188 * TS_PACKET_COUNT),
+					.stream = { 
+					.type = USB_BULK,
+					.count = 10,
+					.endpoint = 0x84,
+					.u = {
+						.bulk = {
+							.buffersize = (188 * TS_PACKET_COUNT),
+							}
 						}
 					}
-				}
+#ifdef V4L2_REFACTORED_MFE_CODE
+		    }},
+#endif
 			},
 		},
 #if 0

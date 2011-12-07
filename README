@@ -1,10 +1,10 @@
-2011-12-01
+2011-12-07
 
 Linux DVB-T Avermedia A867 (italian SKY Digital Key "blue led") driver
 
 - code cleanup
 - added SNR (was missing) 16bit output or dB output (see modinfo param 'snrdb')
-
+- added support for new kernel 3.2.0 (thanks Gennar1)
 
 **** UBUNTU FRESH INSTALL ****
 
@@ -22,6 +22,8 @@ git clone https://github.com/ambrosa/A867_kernel_3.0.0.git
 
 - goto into source dir
 cd A867_kernel_3.0.0
+
+- edit Makefile, option INCLUDE_EXTRA_DVB (choose which include file set)
 
 - compile code
 make clean
