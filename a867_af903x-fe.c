@@ -550,7 +550,7 @@ static int af903x_read_snr(struct dvb_frontend* fe, u16 *snr)
 	Dword dwError = 0;
 	u32 snr_val=0;
 	u16 snr_max=0;
-	u16 snr_16bit = 0;
+	u32 snr_16bit = 0;
 
 	*snr = 0;
 
@@ -583,7 +583,10 @@ static int af903x_read_snr(struct dvb_frontend* fe, u16 *snr)
 		*snr = 0;
 		return 1;
 	}
-	snr_16bit = (0xffff / snr_max) * *snr;
+	snr_16bit = (0xffff * *snr) / snr_max;
+	if (snr_16bit > 0xffff) 
+		snr_16bit = 0xffff;
+
 	deb_data("- Exit %s SNR %d dB , %d 16bit -\n",__FUNCTION__,*snr,snr_16bit);
 
 	if (dvb_usb_af903x_snrdb == 0)
