@@ -159,7 +159,7 @@ static int af903x_probe(struct usb_interface *intf,
 	// init GPIO mappings based on device
 	map_gpio_by_id(id, &DC);
 
-	deb_data("===af903x usb device pluged in!! ===\n");
+	deb_data("===af903x usb device plugged in!! ===\n");
 	retval = Device_init(interface_to_usbdev(intf),intf,&DC, true);
 	if (retval){
                 if(retval) deb_data("Device_init Fail: 0x%08x\n", retval);

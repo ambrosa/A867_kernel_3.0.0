@@ -1,6 +1,6 @@
 # License: GPL
 
-# Choose here wich include file to use: from kernel 3.0.0 (good for 3.1.0) or from kernel 3.2.0
+# Choose here which include file to use: from kernel 3.0.0 (good for 3.1.0) or from kernel 3.2.0
 
 # kernel 3.0.0 / 3.1.0
 #INCLUDE_EXTRA_DVB := include-300
