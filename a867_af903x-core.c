@@ -159,19 +159,23 @@ static int af903x_probe(struct usb_interface *intf,
 	// init GPIO mappings based on device
 	map_gpio_by_id(id, &DC);
 
-	deb_data("===af903x usb device pluged in!! ===\n");
+	deb_data("===af903x usb device plugged in!! ===\n");
 	retval = Device_init(interface_to_usbdev(intf),intf,&DC, true);
 	if (retval){
-                if(retval) deb_data("Device_init Fail: 0x%08x\n", retval);
-        }
-	
+		deb_data("Device_init Fail: 0x%08x\n", retval);
+	}
+
 	for (i = 0; i < af903x_device_count; i++) {
 #if LINUX_VERSION_CODE > KERNEL_VERSION(2,6,25)
-		if (dvb_usb_device_init(intf, &af903x_properties[i], THIS_MODULE, NULL, adapter_nr) == 0)
+		retval = dvb_usb_device_init(intf, &af903x_properties[i], THIS_MODULE, NULL, adapter_nr);
 #else
-		if (dvb_usb_device_init(intf, &af903x_properties[i], THIS_MODULE, NULL) == 0)
+		retval = dvb_usb_device_init(intf, &af903x_properties[i], THIS_MODULE, NULL);
 #endif
-			{deb_data("dvb_usb_device_init success!!\n");return 0;}
+		if (retval == 0) {
+			deb_data("dvb_usb_device_init success!!\n");
+			return 0;
+		}
+		deb_data("dvb_usb_device_init of af903x_properties[%d] returned %d\n", i, retval);
 	}
 
 	return -ENOMEM;
