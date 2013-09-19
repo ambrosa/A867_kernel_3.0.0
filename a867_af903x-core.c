@@ -162,9 +162,9 @@ static int af903x_probe(struct usb_interface *intf,
 	deb_data("===af903x usb device plugged in!! ===\n");
 	retval = Device_init(interface_to_usbdev(intf),intf,&DC, true);
 	if (retval){
-                if(retval) deb_data("Device_init Fail: 0x%08x\n", retval);
-        }
-	
+		deb_data("Device_init Fail: 0x%08x\n", retval);
+	}
+
 	for (i = 0; i < af903x_device_count; i++) {
 #if LINUX_VERSION_CODE > KERNEL_VERSION(2,6,25)
 		if (dvb_usb_device_init(intf, &af903x_properties[i], THIS_MODULE, NULL, adapter_nr) == 0)
