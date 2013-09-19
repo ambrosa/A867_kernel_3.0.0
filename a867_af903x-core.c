@@ -167,11 +167,15 @@ static int af903x_probe(struct usb_interface *intf,
 
 	for (i = 0; i < af903x_device_count; i++) {
 #if LINUX_VERSION_CODE > KERNEL_VERSION(2,6,25)
-		if (dvb_usb_device_init(intf, &af903x_properties[i], THIS_MODULE, NULL, adapter_nr) == 0)
+		retval = dvb_usb_device_init(intf, &af903x_properties[i], THIS_MODULE, NULL, adapter_nr);
 #else
-		if (dvb_usb_device_init(intf, &af903x_properties[i], THIS_MODULE, NULL) == 0)
+		retval = dvb_usb_device_init(intf, &af903x_properties[i], THIS_MODULE, NULL);
 #endif
-			{deb_data("dvb_usb_device_init success!!\n");return 0;}
+		if (retval == 0) {
+			deb_data("dvb_usb_device_init success!!\n");
+			return 0;
+		}
+		deb_data("dvb_usb_device_init of af903x_properties[%d] returned %d\n", i, retval);
 	}
 
 	return -ENOMEM;
