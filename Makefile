@@ -27,7 +27,8 @@ EXTRA_CFLAGS += -I$(KBUILD_SRC)/drivers/media/dvb/dvb-usb/ \
 		-I$(KBUILD_SRC)/drivers/media/dvb/dvb-core/ \
 		-I$(KBUILD_SRC)/drivers/media/dvb/frontends/ \
 		-I$(KBUILD_SRC)/drivers/media/common/tuners/ \
- 		-I$(SOURCEDIR)/$(INCLUDE_EXTRA_DVB)
+		-I$(SOURCEDIR)/$(INCLUDE_EXTRA_DVB) \
+		-D__DVB_CORE__
 
 KINS = /lib/modules
 KDIR = /usr/src/linux-headers-$(UNAME_R)
