@@ -12,6 +12,9 @@ INCLUDE_EXTRA_DVB := include-320
 
 SOURCEDIR := $(PWD)
 
+# Default to building for the current kernel - to override use e.g.: make UNAME_R=3.2.0-12-generic
+UNAME_R := $(shell uname -r)
+
 dvb-usb-a867-objs := a867_af903x-core.o a867_af903x-devices.o a867_af903x-drv.o \
                        a867_af903x-fe.o a867_af903x-tuner.o a867_cmd.o a867_standard.o \
                        a867_demodulator.o a867_demodulatorextend.o a867_usb2impl.o \
@@ -27,13 +30,13 @@ EXTRA_CFLAGS += -I$(KBUILD_SRC)/drivers/media/dvb/dvb-usb/ \
  		-I$(SOURCEDIR)/$(INCLUDE_EXTRA_DVB)
 
 KINS = /lib/modules
-KDIR = /usr/src/linux-headers-`uname -r`
+KDIR = /usr/src/linux-headers-$(UNAME_R)
 
 default:
 	make -C $(KDIR) SUBDIRS=$(PWD) modules
 
 install:
-	cp dvb-usb-a867.ko $(KINS)/`uname -r`/kernel/drivers/media/dvb/dvb-usb/ 
+	cp dvb-usb-a867.ko $(KINS)/$(UNAME_R)/kernel/drivers/media/dvb/dvb-usb/ 
 	depmod -a
 
 clean:
